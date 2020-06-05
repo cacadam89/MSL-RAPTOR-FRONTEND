@@ -105,3 +105,6 @@ venv.bak/
 
 # Weight files
 *.pth
+
+# Exception
+!data/
