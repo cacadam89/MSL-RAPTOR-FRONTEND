@@ -11,12 +11,12 @@ RUN source /ros_python3_entrypoint.sh && \
     #catkin config --install && \
     mkdir src && \
     cd  src && \
-    git clone --recurse-submodules https://github.com/StanfordMSL/MSL-RAPTOR.git msl_raptor && \
+    git clone --recurse-submodules https://github.com/cacadam89/MSL-RAPTOR-FRONTEND.git msl_raptor_frontend && \
     cd .. && \
     catkin build
 
 # Set up SiamMask
-RUN cd msl_raptor_ws/src/msl_raptor/src/front_end/SiamMask && \
+RUN cd msl_raptor_ws/src/msl_raptor_frontend/src/SiamMask && \
     pip3 install -r requirements.txt && \
     /bin/bash make.sh && \
     cd experiments/siammask_sharp && \
@@ -25,8 +25,8 @@ RUN cd msl_raptor_ws/src/msl_raptor/src/front_end/SiamMask && \
     pip3 install scipy --upgrade && \
     # Torch2trt weights
     pip3 install gdown && \
-    mkdir ~/msl_raptor_ws/src/msl_raptor/src/front_end/SiamMask/weights_trt && \
-    cd ~/msl_raptor_ws/src/msl_raptor/src/front_end/SiamMask/weights_trt && \
+    mkdir ~/msl_raptor_ws/src/msl_raptor_frontend/src/SiamMask/weights_trt && \
+    cd ~/msl_raptor_ws/src/msl_raptor_frontend/src/SiamMask/weights_trt && \
     gdown https://drive.google.com/uc?id=1_VR2c2UpW8UoZz5k4LS835jFj_7K2bAR && \
     pip3 uninstall -y gdown && \
     tar -xzvf siammask_trt_weights.tar.gz && \
@@ -35,12 +35,12 @@ RUN cd msl_raptor_ws/src/msl_raptor/src/front_end/SiamMask && \
 # Set up YOLO
 RUN apt-get update && \
     apt-get install -y python3-tk && \
-    touch msl_raptor_ws/src/msl_raptor/src/front_end/yolov3/__init__.py && \
+    touch msl_raptor_ws/src/msl_raptor_frontend/src/yolov3/__init__.py && \
     # Download drone detection weights
     pip3 install gdown && \
-    cd ~/msl_raptor_ws/src/msl_raptor/src/front_end/yolov3/weights && \
+    cd ~/msl_raptor_ws/src/msl_raptor_frontend/src/yolov3/weights && \
     gdown https://drive.google.com/uc?id=1ZkK8AwVH1_MWo4tP6L4uGl9NxCf_SzrG && \
-    cd ~/msl_raptor_ws/src/msl_raptor/src/front_end/yolov3/cfg && \
+    cd ~/msl_raptor_ws/src/msl_raptor_frontend/src/yolov3/cfg && \
     gdown https://drive.google.com/uc?id=1k8SvfBfU3YZk-Ogb8VjJ8OWcTkFfL0ab && \
     pip3 uninstall -y gdown && \
     rm -rf /var/lib/apt/lists/*
@@ -88,12 +88,12 @@ RUN apt-get update && \
 # Add aliases to bashrc in docker containers
 RUN echo 'alias raptor_go="clear && roslaunch msl_raptor msl_raptor.launch"' >> ~/.bashrc && \
     echo 'alias viz_go="roslaunch msl_raptor raptor_viz.launch"' >> ~/.bashrc && \
-    echo 'alias logs_go="python3 ~/msl_raptor_ws/src/msl_raptor/src/utils_msl_raptor/rosbag_to_logs.py"' >> ~/.bashrc && \
-    echo 'alias metrics_go="python3 ~/msl_raptor_ws/src/msl_raptor/src/viz_tools/result_analyser.py"' >> ~/.bashrc && \
-    echo 'alias weight_reset_go="rm ~/msl_raptor_ws/src/msl_raptor/src/front_end/SiamMask/weights_trt/*.pth"' >> ~/.bashrc
+    echo 'alias logs_go="python3 ~/msl_raptor_ws/src/msl_raptor_frontend/src/utils_msl_raptor/rosbag_to_logs.py"' >> ~/.bashrc && \
+    echo 'alias metrics_go="python3 ~/msl_raptor_ws/src/msl_raptor_frontend/src/viz_tools/result_analyser.py"' >> ~/.bashrc && \
+    echo 'alias weight_reset_go="rm ~/msl_raptor_ws/src/msl_raptor_frontend/src/SiamMask/weights_trt/*.pth"' >> ~/.bashrc
 
 RUN source /ros_python3_entrypoint.sh && \
-    cd msl_raptor_ws/src/msl_raptor && \
+    cd msl_raptor_ws/src/msl_raptor_frontend && \
     git pull --recurse-submodules && \
     catkin build
 
@@ -103,7 +103,7 @@ ARG GIT_EMAIL=
 RUN git config --global user.email "$GIT_EMAIL" && \
     git config --global user.name "$GIT_NAME"
 
-COPY ./msl_raptor_entrypoint.sh /
+COPY ./msl_raptor_frontend_entrypoint.sh /
 
-ENTRYPOINT ["/msl_raptor_entrypoint.sh"]
+ENTRYPOINT ["/msl_raptor_frontend_entrypoint.sh"]
 CMD ["bash"]
