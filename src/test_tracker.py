@@ -1,11 +1,16 @@
-import glob
+import sys, os, glob, pdb
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src/SiamMask')
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src/SiamMask/experiments/siammask_sharp')
 from tracker import SiammaskTracker
 from tools.test import *
-img_files = sorted(glob.glob(join('SiamMask/data/tennis/*.jp*')))
+
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src/'
+
+img_files = sorted(glob.glob(join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'src/SiamMask/data/tennis/*.jp*')))
 ims = [cv2.imread(imf) for imf in img_files]
 print(len(ims))
 
-t = SiammaskTracker(fp16_mode=True,features_trt=True,rpn_trt=False,mask_trt=False,refine_trt=False)
+t = SiammaskTracker(sample_im=ims[0], base_dir=base_dir, fp16_mode=True,features_trt=True,rpn_trt=False,mask_trt=False,refine_trt=False)
 
 cv2.namedWindow("SiamMask", cv2.WND_PROP_FULLSCREEN)
 # cv2.setWindowProperty("SiamMask", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
