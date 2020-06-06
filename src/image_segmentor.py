@@ -4,9 +4,10 @@ import sys, os, time
 import numpy as np
 import math
 import numpy.linalg as la
-from utils_msl_raptor.ukf_utils import bb_corners_to_angled_bb
-from utils_msl_raptor.ukf_utils import condensed_to_square
+from front_end_utils import bb_corners_to_angled_bb, condensed_to_square
 from scipy.spatial.distance import pdist,squareform
+
+
 class TrackedObject:
     def __init__(self, object_id, class_str):
         self.id = object_id
@@ -15,7 +16,7 @@ class TrackedObject:
 
 class ImageSegmentor:
     def __init__(self,sample_im,detector_name='yolov3',tracker_name='siammask', detect_classes_ids=[0,39,41,45,63,80], detect_classes_names = ['person','bottle','cup','bowl','laptop','mslquad'],use_trt=False, im_width=640, im_height=480, detection_period = 5,verbose=False, use_track_checks=True, use_gt_detect_bb=False):
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/front_end/'
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src/'
         print('Using classes '+str(detect_classes_names))
         if detector_name == 'yolov3':
             self.detector = YoloDetector(sample_im,base_dir=base_dir, classes_ids=detect_classes_ids)

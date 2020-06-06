@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 
+import sys, os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src/')
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src/yolov3')
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src/SiamMask')
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src/SiamMask/models')
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src/SiamMask/experiments')
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/src/SiamMask/experiments/siammask_sharp')
 from image_segmentor import ImageSegmentor
 import cv2
 import numpy as np
 import time
 import pdb
 
-print("Hi")
 im = cv2.imread('SiamMask/data/tennis/00000.jpg')
-
-i_s = ImageSegmentor(im, detect_class_ids=[0, 80])
+i_s = ImageSegmentor(im, detect_classes_ids=[0, 80])
 
 N = 100
 
